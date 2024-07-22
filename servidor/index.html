@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GraphQL Interaction Example</title>
+</head>
+<body>
+    <h1>Replace Text Mutation</h1>
+    <form id="replaceTextForm" onsubmit="handleReplaceText(event)">
+        <label for="newContent">New Content:</label>
+        <input type="text" id="newContent" name="newContent">
+        <button type="submit">Replace Text</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        async function handleReplaceText(event) {
+            event.preventDefault();
+            const newContent = document.getElementById("newContent").value;
+
+            const response = await fetch('http://localhost:4000/graphql', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json'
+                },
+                body: JSON.stringify({
+                    query: `
+                        mutation {
+                            replaceText(newContent: "${newContent}")
+                        }
+                    `
+                })
+            });
+
+            const data = await response.json();
+            document.getElementById("result").innerText = data.data.replaceText;
+        }
+    </script>
+</body>
+</html>
